@@ -15,11 +15,11 @@ VideoHandler::VideoHandler(AVStream* vStream): swsContext(nullptr)
 
 	codec = avcodec_find_decoder(codecContext->codec_id);
 	if (codec == nullptr) {
-		fprintf(stderr, "Codec not found or unsupported.\n");
+		fprintf(stderr, "Video codec not found or unsupported.\n");
 		exit(1);
 	}
 	if (avcodec_open2(codecContext, codec, nullptr) < 0) {
-		fprintf(stderr, "Could not open codec.\n");
+		fprintf(stderr, "Could not open videocodec.\n");
 		exit(1);
 	}
 

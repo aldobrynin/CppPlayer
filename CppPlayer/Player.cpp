@@ -18,6 +18,9 @@ Player::~Player()
 {
 	avformat_close_input(&pFormatCtx);
 	SDL_Quit();
+	delete audio;
+	delete video;
+	delete sync;
 }
 
 void Player::Open(char *filename)
@@ -107,7 +110,7 @@ int Player::EventListener()
 			}
 			if (event.type == SDL_USEREVENT)
 			{
-				Uint32 delay = (int)(sync->computeFrameDelay() * 1000);
+				Uint32 delay = (int)(sync->computeFrameDelay() * 500);
 				SDL_AddTimer(delay, TimerCallback, nullptr);
 				video->RenderPicture();
 			}

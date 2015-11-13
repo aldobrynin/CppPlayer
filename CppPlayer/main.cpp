@@ -8,9 +8,9 @@ int main(int argc, char* argv[])
 		fprintf(stderr, "Missing input file.\nUsage: %s <filename>\n", argv[0]);
 		return -1;
 	}
-	Player player;
-	player.Open(argv[1]);
-	player.Play();
-	
+	Player *player = new Player();
+	player->Open(argv[1]);
+	player->Play();
+	delete player;
 	return 0;
 }
