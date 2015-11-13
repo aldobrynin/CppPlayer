@@ -107,6 +107,7 @@ AudioHandler::AudioHandler(AVStream* aStream)
 	}
 	SDL_AudioSpec desiredSpecs;
 	SDL_AudioSpec specs;
+	SDL_zero(desiredSpecs);
 	desiredSpecs.freq = codecContext->sample_rate;
 	desiredSpecs.format = AUDIO_S16SYS;
 	desiredSpecs.channels = codecContext->channels;
@@ -114,15 +115,23 @@ AudioHandler::AudioHandler(AVStream* aStream)
 	desiredSpecs.samples = SDL_AUDIO_BUFFER_SIZE;
 	desiredSpecs.callback = PlaybackCallback;
 	desiredSpecs.userdata = this;
-	if (SDL_OpenAudio(&desiredSpecs, &specs) < 0) {
+
+	//if (SDL_OpenAudio(&desiredSpecs, &specs) < 0) {
+	device = SDL_OpenAudioDevice(nullptr, 0, &desiredSpecs, &specs, SDL_AUDIO_ALLOW_FORMAT_CHANGE);
+	if (device == 0) {
 		fprintf(stderr, "Couldn't open audio: %s\n", SDL_GetError());
 		exit(1);
 	}
+	if (desiredSpecs.format != specs.format)
+		printf("We didn't get desired audio format.\n");
+
+
 }
 
 void AudioHandler::Start()
 {
-	SDL_PauseAudio(0);
+	//SDL_PauseAudio(0);
+	SDL_PauseAudioDevice(device, 0);
 }
 
 void AudioHandler::PutPacket(AVPacket* pkt) const
@@ -146,7 +155,8 @@ double AudioHandler::AudioClock() const
 void AudioHandler::Quit()
 {
 	isQuit = true;
-	SDL_CloseAudio();
+	//SDL_CloseAudio();
+	SDL_CloseAudioDevice(device);
 }
 
 AudioHandler::~AudioHandler()

@@ -20,7 +20,7 @@ class AudioHandler
 	PacketQueue* packetQueue;
 	AVPacket* audioPacket;
 	AVFrame* frame;
-
+	SDL_AudioDeviceID device;
 	double clock;
 
 	uint8_t audioBuffer[MAX_AUDIO_FRAME_SIZE];
@@ -35,7 +35,7 @@ public:
 	bool isQuit;
 
 	AudioHandler(AVStream* aStream);
-	static void Start();
+	void Start();
 	void PutPacket(AVPacket* pkt) const;
 	double AudioClock() const;
 	void Quit();
